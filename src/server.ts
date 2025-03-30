@@ -58,82 +58,82 @@ server.tool(
 
 server.tool(
   "goBuild",
-  "Builds Go packages with optional flags.",
-  { flags: z.string().optional(), packages: z.string().optional() },
-  async ({ flags = "", packages = "./..." }: { flags?: string; packages?: string }) => ({
-    content: [{ type: "text", text: await goBuild(flags, packages) }],
+  "Builds Go packages with optional flags in a specified project directory.",
+  { projectPath: z.string(), flags: z.string().optional(), packages: z.string().optional() },
+  async ({ projectPath, flags = "", packages = "./..." }: { projectPath: string; flags?: string; packages?: string }) => ({
+    content: [{ type: "text", text: await goBuild(flags, packages, projectPath) }],
   })
 );
 
 server.tool(
   "goRun",
-  "Runs a Go file with optional flags.",
-  { file: z.string(), flags: z.string().optional() },
-  async ({ file, flags = "" }: { file: string; flags?: string }) => ({
-    content: [{ type: "text", text: await goRun(file, flags) }],
+  "Runs a Go file with optional flags in a specified project directory.",
+  { projectPath: z.string(), file: z.string(), flags: z.string().optional() },
+  async ({ projectPath, file, flags = "" }: { projectPath: string; file: string; flags?: string }) => ({
+    content: [{ type: "text", text: await goRun(file, flags, projectPath) }],
   })
 );
 
 server.tool(
   "goTest",
-  "Runs Go tests for specified packages with optional flags.",
-  { flags: z.string().optional(), packages: z.string().optional() },
-  async ({ flags = "", packages = "./..." }: { flags?: string; packages?: string }) => ({
-    content: [{ type: "text", text: await goTest(flags, packages) }],
+  "Runs Go tests for specified packages with optional flags in a specified project directory.",
+  { projectPath: z.string(), flags: z.string().optional(), packages: z.string().optional() },
+  async ({ projectPath, flags = "", packages = "./..." }: { projectPath: string; flags?: string; packages?: string }) => ({
+    content: [{ type: "text", text: await goTest(flags, packages, projectPath) }],
   })
 );
 
 server.tool(
   "goModInit",
-  "Initializes a new Go module with the given module name.",
-  { moduleName: z.string() },
-  async ({ moduleName }: { moduleName: string }) => ({
-    content: [{ type: "text", text: await goModInit(moduleName) }],
+  "Initializes a new Go module with the given module name in a specified project directory.",
+  { projectPath: z.string(), moduleName: z.string() },
+  async ({ projectPath, moduleName }: { projectPath: string; moduleName: string }) => ({
+    content: [{ type: "text", text: await goModInit(moduleName, projectPath) }],
   })
 );
 
 server.tool(
   "goModTidy",
-  "Tidies up the Go module dependencies.",
-  {},
-  async () => ({
-    content: [{ type: "text", text: await goModTidy() }],
+  "Tidies up the Go module dependencies in a specified project directory.",
+  { projectPath: z.string() },
+  async ({ projectPath }: { projectPath: string }) => ({
+    content: [{ type: "text", text: await goModTidy(projectPath) }],
   })
 );
 
 server.tool(
   "goModVerify",
-  "Verifies the Go module dependencies.",
-  {},
-  async () => ({
-    content: [{ type: "text", text: await goModVerify() }],
+  "Verifies the Go module dependencies in a specified project directory.",
+  { projectPath: z.string() },
+  async ({ projectPath }: { projectPath: string }) => ({
+    content: [{ type: "text", text: await goModVerify(projectPath) }],
   })
 );
 
 server.tool(
   "goFmt",
-  "Formats the Go code for the specified packages.",
-  { packages: z.string().optional() },
-  async ({ packages = "./..." }: { packages?: string }) => ({
-    content: [{ type: "text", text: await goFmt(packages) }],
+  "Formats the Go code for the specified packages in a specified project directory.",
+  { projectPath: z.string(), packages: z.string().optional() },
+  async ({ projectPath, packages = "./..." }: { projectPath: string; packages?: string }) => ({
+    content: [{ type: "text", text: await goFmt(packages, projectPath) }],
   })
 );
 
 server.tool(
   "goVet",
-  "Runs the Go vet tool on specified packages.",
-  { packages: z.string().optional() },
-  async ({ packages = "./..." }: { packages?: string }) => ({
-    content: [{ type: "text", text: await goVet(packages) }],
+  "Runs the Go vet tool on specified packages in a specified project directory.",
+  { projectPath: z.string(), packages: z.string().optional() },
+  async ({ projectPath, packages = "./..." }: { projectPath: string; packages?: string }) => ({
+    content: [{ type: "text", text: await goVet(packages, projectPath) }],
   })
 );
 
 server.tool(
   "goDoc",
-  "Generates documentation for a given Go symbol.",
-  { symbol: z.string() },
-  async ({ symbol }: { symbol: string }) => ({
-    content: [{ type: "text", text: await goDoc(symbol) }],
+  "Generates documentation for a given Go symbol in a specified project directory.",
+  { projectPath: z.string(), symbol: z.string() },
+  async ({ projectPath, symbol }: { projectPath: string; symbol: string }) => ({
+    content: [{ type: "text", text: await goDoc(symbol, projectPath) }],
   })
 );
 
