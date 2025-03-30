@@ -35,7 +35,8 @@ export const goCompile = async (
   projectPath: string,
   envVars?: Record<string, string>
 ): Promise<string> => {
-  return await runCommand(`go build ${flags} ${packages} && echo "Build succeeded"`, projectPath, envVars);
+  const output = await runCommand(`go build ${flags} ${packages}`, projectPath, envVars);
+  return output.trim() === "" ? "Build succeeded" : output;
 };
 
 
