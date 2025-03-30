@@ -24,8 +24,8 @@ def run_command(command: List[str], cwd: Optional[str] = None, env: Optional[Dic
             raise subprocess.CalledProcessError(result.returncode, command, result.stderr)
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
-        return f"Error: {e.stderr.strip()}"
-
+        error_message = e.stderr.strip() if e.stderr else "Error occurred"
+        return f"Error: {error_message}"
 
 @mcp.tool()
 def go_version(ctx: Context, env: Optional[Dict[str, str]] = None) -> str:

@@ -4,8 +4,16 @@ FROM golang:latest AS go-builder
 # Stage 2: Python Builder - Install Python and dependencies
 FROM python:3.10-slim AS python-builder
 WORKDIR /app
+
+# Copy requirements and install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the application code and test files
+COPY . .
+
+# Run tests during the build process
+RUN python -m unittest discover -s . -p "test_*.py"
 
 # Stage 3: Final image based on Python base
 FROM python:3.10-slim
