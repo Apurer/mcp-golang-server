@@ -29,7 +29,7 @@ export const goEnv = async (envVars?: Record<string, string>): Promise<string> =
   return await runCommand('go env', undefined, envVars);
 };
 
-export const goCompile = async (
+export const goBuild = async (
   flags: string,
   packages: string,
   projectPath: string,

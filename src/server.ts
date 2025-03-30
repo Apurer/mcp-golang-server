@@ -15,7 +15,7 @@ import { z } from "zod"; // Make sure this package is installed
 import {
   goVersion,
   goEnv,
-  goCompile,
+  goBuild,
   goRun,
   goTest,
   goModInit,
@@ -57,7 +57,7 @@ server.tool(
 );
 
 server.tool(
-  "goCompile",
+  "goBuild",
   "Builds Go packages in a specified project directory.\n" +
     "Parameters:\n" +
     "- projectPath: Absolute path to the Go project directory.\n" +
@@ -81,7 +81,7 @@ server.tool(
     packages?: string;
     env?: Record<string, string>;
   }) => ({
-    content: [{ type: "text", text: await goCompile(flags, packages, projectPath, env) }],
+    content: [{ type: "text", text: await goBuild(flags, packages, projectPath, env) }],
   })
 );
 
