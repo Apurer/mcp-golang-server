@@ -29,14 +29,15 @@ export const goEnv = async (envVars?: Record<string, string>): Promise<string> =
   return await runCommand('go env', undefined, envVars);
 };
 
-export const goBuild = async (
+export const goCompile = async (
   flags: string,
   packages: string,
   projectPath: string,
   envVars?: Record<string, string>
 ): Promise<string> => {
-  return await runCommand(`go build ${flags} ${packages}`, projectPath, envVars);
+  return await runCommand(`go build ${flags} ${packages} && echo "Build succeeded"`, projectPath, envVars);
 };
+
 
 export const goRun = async (
   file: string,

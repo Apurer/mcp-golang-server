@@ -15,7 +15,7 @@ import { z } from "zod"; // Make sure this package is installed
 import {
   goVersion,
   goEnv,
-  goBuild,
+  goCompile,
   goRun,
   goTest,
   goModInit,
@@ -57,13 +57,13 @@ server.tool(
 );
 
 server.tool(
-  "goBuild",
+  "goCompile",
   "Builds Go packages in a specified project directory.\n" +
     "Parameters:\n" +
     "- projectPath: Absolute path to the Go project directory.\n" +
     "- flags (optional): Additional build flags.\n" +
     "- packages (optional): Packages to build (default './...').\n" +
-    "- env (optional): Object of environment variables (e.g., { GOPROXY: 'direct' }) to customize the build environment.",
+    "- env (optional): Object of environment variables (e.g., { GOPROXY: 'direct' }).",
   {
     projectPath: z.string(),
     flags: z.string().optional(),
@@ -81,7 +81,7 @@ server.tool(
     packages?: string;
     env?: Record<string, string>;
   }) => ({
-    content: [{ type: "text", text: await goBuild(flags, packages, projectPath, env) }],
+    content: [{ type: "text", text: await goCompile(flags, packages, projectPath, env) }],
   })
 );
 
@@ -323,3 +323,4 @@ server.connect(transport).catch((err) => {
   console.error("Error connecting to transport:", err);
   process.exit(1);
 });
+
