@@ -17,6 +17,8 @@ RUN chmod +x ./dist/server.js
 # Stage 3: Final image based on Ubuntu
 FROM ubuntu:latest
 
+RUN apt-get update && apt-get install -y git
+
 # Copy Node.js binaries and libraries from the Node builder stage
 COPY --from=node-builder /usr/local/ /usr/local/
 # Copy the Go installation from the Go builder stage

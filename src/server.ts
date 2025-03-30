@@ -1,4 +1,3 @@
-// server.ts
 // Redirect console.log to stderr
 console.log = function (...args) {
   process.stderr.write(args.join(" ") + "\n");
@@ -41,7 +40,7 @@ const server = new McpServer({
 
 server.tool(
   "goVersion",
-  "Returns the current Go version installed on the system.",
+  "Returns the current Go version installed on the system. Optional env parameter can be used to set Go environment variables (e.g., GOPROXY).",
   { env: z.record(z.string()).optional() },
   async ({ env = {} }: { env?: Record<string, string> }) => ({
     content: [{ type: "text", text: await goVersion(env) }],
@@ -50,7 +49,7 @@ server.tool(
 
 server.tool(
   "goEnv",
-  "Returns the Go environment variables.",
+  "Returns the current Go environment variables. Use the optional env parameter to override or supplement the default environment.",
   { env: z.record(z.string()).optional() },
   async ({ env = {} }: { env?: Record<string, string> }) => ({
     content: [{ type: "text", text: await goEnv(env) }],
@@ -59,7 +58,12 @@ server.tool(
 
 server.tool(
   "goBuild",
-  "Builds Go packages with optional flags in a specified project directory.",
+  "Builds Go packages in a specified project directory.\n" +
+    "Parameters:\n" +
+    "- projectPath: Absolute path to the Go project directory.\n" +
+    "- flags (optional): Additional build flags.\n" +
+    "- packages (optional): Packages to build (default './...').\n" +
+    "- env (optional): Object of environment variables (e.g., { GOPROXY: 'direct' }) to customize the build environment.",
   {
     projectPath: z.string(),
     flags: z.string().optional(),
@@ -83,7 +87,12 @@ server.tool(
 
 server.tool(
   "goRun",
-  "Runs a Go file with optional flags in a specified project directory.",
+  "Runs a Go file in a specified project directory.\n" +
+    "Parameters:\n" +
+    "- projectPath: Absolute path to the Go project directory.\n" +
+    "- file: Path to the Go file to run.\n" +
+    "- flags (optional): Additional run flags.\n" +
+    "- env (optional): Object of environment variables (e.g., { GOPROXY: 'direct' }).",
   {
     projectPath: z.string(),
     file: z.string(),
@@ -107,7 +116,12 @@ server.tool(
 
 server.tool(
   "goTest",
-  "Runs Go tests for specified packages with optional flags in a specified project directory.",
+  "Runs Go tests for specified packages in a given project directory.\n" +
+    "Parameters:\n" +
+    "- projectPath: Absolute path to the Go project directory.\n" +
+    "- flags (optional): Additional test flags.\n" +
+    "- packages (optional): Packages to test (default './...').\n" +
+    "- env (optional): Object of environment variables to customize test execution.",
   {
     projectPath: z.string(),
     flags: z.string().optional(),
@@ -131,7 +145,11 @@ server.tool(
 
 server.tool(
   "goModInit",
-  "Initializes a new Go module with the given module name in a specified project directory.",
+  "Initializes a new Go module in the specified project directory.\n" +
+    "Parameters:\n" +
+    "- projectPath: Absolute path to the project directory.\n" +
+    "- moduleName: Name of the new module.\n" +
+    "- env (optional): Object of environment variables (e.g., for module proxy settings).",
   {
     projectPath: z.string(),
     moduleName: z.string(),
@@ -152,7 +170,10 @@ server.tool(
 
 server.tool(
   "goModTidy",
-  "Tidies up the Go module dependencies in a specified project directory.",
+  "Tidies up the Go module dependencies in the specified project directory.\n" +
+    "Parameters:\n" +
+    "- projectPath: Absolute path to the project directory.\n" +
+    "- env (optional): Object of environment variables to influence the tidy operation.",
   {
     projectPath: z.string(),
     env: z.record(z.string()).optional(),
@@ -170,7 +191,10 @@ server.tool(
 
 server.tool(
   "goModVerify",
-  "Verifies the Go module dependencies in a specified project directory.",
+  "Verifies the Go module dependencies in a specified project directory.\n" +
+    "Parameters:\n" +
+    "- projectPath: Absolute path to the project directory.\n" +
+    "- env (optional): Object of environment variables (e.g., { GOPROXY: 'direct' }) to handle TLS or proxy issues.",
   {
     projectPath: z.string(),
     env: z.record(z.string()).optional(),
@@ -188,7 +212,11 @@ server.tool(
 
 server.tool(
   "goFmt",
-  "Formats the Go code for the specified packages in a specified project directory.",
+  "Formats the Go code for specified packages in a given project directory.\n" +
+    "Parameters:\n" +
+    "- projectPath: Absolute path to the project directory.\n" +
+    "- packages (optional): Packages to format (default './...').\n" +
+    "- env (optional): Object of environment variables to customize formatting.",
   {
     projectPath: z.string(),
     packages: z.string().optional(),
@@ -209,7 +237,11 @@ server.tool(
 
 server.tool(
   "goVet",
-  "Runs the Go vet tool on specified packages in a specified project directory.",
+  "Runs the Go vet tool on specified packages in a given project directory.\n" +
+    "Parameters:\n" +
+    "- projectPath: Absolute path to the project directory.\n" +
+    "- packages (optional): Packages to vet (default './...').\n" +
+    "- env (optional): Object of environment variables for vet execution.",
   {
     projectPath: z.string(),
     packages: z.string().optional(),
@@ -230,7 +262,11 @@ server.tool(
 
 server.tool(
   "goDoc",
-  "Generates documentation for a given Go symbol in a specified project directory.",
+  "Generates documentation for a given Go symbol in a specified project directory.\n" +
+    "Parameters:\n" +
+    "- projectPath: Absolute path to the project directory.\n" +
+    "- symbol: The Go symbol to document.\n" +
+    "- env (optional): Object of environment variables to customize the documentation output.",
   {
     projectPath: z.string(),
     symbol: z.string(),
@@ -252,7 +288,7 @@ server.tool(
 // Directory listing tool with path validation
 server.tool(
   "listDir",
-  "Lists files in the given directory if it is allowed.",
+  "Lists files in the given directory if it is allowed. Only directories specified in the allowed directories can be accessed.",
   { dirPath: z.string() },
   async ({ dirPath }: { dirPath: string }) => {
     const isAllowed = allowedDirectories.some((dir) => dirPath.startsWith(dir));
